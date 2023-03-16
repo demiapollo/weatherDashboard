@@ -1,7 +1,6 @@
 
 
 //making the api request
-const apiKey = "473b00c4ed0b74d622b98d1645a9c63d"
 const cityInputEl = document.getElementById("city-input");
 
 function getApi () {
