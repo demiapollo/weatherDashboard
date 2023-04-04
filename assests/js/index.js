@@ -42,6 +42,7 @@ function getApi() {
 
       const target = document.getElementById("forecastFiveDays");
       target.parentNode.insertBefore(h5El, target);
+      
     });
 
   saveCity();
@@ -86,7 +87,6 @@ function saveCity() {
   var city = document.getElementById("city-input").value;
   localStorage.setItem("city", city);
   city.innerHTML = `${city}`;
-  containerEl.prepend(city);
 
   console.log(city);
 }
@@ -98,7 +98,8 @@ function displayCity() {
     console.log(city);
     var cityEl = document.createElement("button");
     cityEl.textContent = city;
-    cityEl.classList.add("btn", "btn-primary", "btn-block", "mt-2");
+    cityEl.classList.add("btn", "btn-primary", "btn-block", "mt-2", "mb-5");
+    cityEl.setAttribute("class", "d-block w-100");
     cityEl.setAttribute("id", "city-button");
     subcontainerEl.append(cityEl);
   }
