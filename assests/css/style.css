@@ -12,3 +12,7 @@ span {
     height: 45px; 
     width: 45px;
 }
+
+h5 {
+    display: none;
+}

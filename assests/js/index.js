@@ -2,12 +2,15 @@
 const cityInputEl = document.getElementById("city-input");
 const containerEl = document.querySelector(".container");
 const subcontainerEl = document.querySelector(".subcontainer");
+const containerButtons = document.querySelector(".container_buttons");
 const apiKey = "473b00c4ed0b74d622b98d1645a9c63d";
 //console.log(apiKey)
 
-function getApi() {
-  getCurrentDay();
-  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityInputEl.value}&appid=${apiKey}&units=imperial`;
+let cityList = JSON.parse(localStorage.getItem("cityList")) || [];
+
+function getApi(cityName) {
+  getCurrentDay(cityName);
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}&units=imperial`;
   fetch(url)
     .then(function (response) {
       return response.json();
@@ -36,21 +39,22 @@ function getApi() {
 </div>
             `;
       }
-      document.getElementById("forecastFiveDays").innerHTML = htmlCard;
-      const h5El = document.createElement("h5");
-      h5El.innerText = "5-Day Forecast: ";
 
-      const target = document.getElementById("forecastFiveDays");
-      target.parentNode.insertBefore(h5El, target);
-      
+      document.querySelector("#fiveDay").style.display = "block";
+      document.getElementById("forecastFiveDays").innerHTML = htmlCard;
+      // const h5El = document.createElement("h5");
+      // h5El.innerText = "5-Day Forecast: ";
+
+      // const target = document.getElementById("forecastFiveDays");
+      // target.parentNode.insertBefore(h5El, target);
     });
 
-  saveCity();
+  saveCity(cityName);
   displayCity();
 }
 //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-function getCurrentDay() {
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityInputEl.value}&appid=${apiKey}&units=imperial`;
+function getCurrentDay(cityName) {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=imperial`;
   fetch(url)
     .then(function (response) {
       return response.json();
@@ -61,9 +65,9 @@ function getCurrentDay() {
 
       htmlCard += `
             <div class="card" style="width: 100%;">
-            <h5 class="card-title">${cityInputEl.value} <span>(${dayjs(
+            <h4 class="card-title">${cityName} <span>(${dayjs(
         data.dt_txt
-      ).format("MM/DD/YYYY")})</span></h5>
+      ).format("MM/DD/YYYY")})</span></h4>
             <h5 class="card-title">${data.weather[0].description}<span>
   <img src="https://openweathermap.org/img/wn/${
     data.weather[0].icon
@@ -83,26 +87,36 @@ function getCurrentDay() {
 }
 
 //adding city input to local storage
-function saveCity() {
-  var city = document.getElementById("city-input").value;
-  localStorage.setItem("city", city);
-  city.innerHTML = `${city}`;
 
-  console.log(city);
+function saveCity(cityName) {
+  if (!cityList.includes(cityName)) {
+    cityList.push(cityName);
+    localStorage.setItem("cityList", JSON.stringify(cityList));
+  }
+  cityInputEl.value = ``;
 }
 
 //displaying the city from local storage
 function displayCity() {
-  for (let i = 0; i < localStorage.length; i++) {
-    var city = localStorage.getItem("city");
+  containerButtons.innerHTML = "";
+
+  for (let i = 0; i < cityList.length; i++) {
+    var city = cityList[i];
     console.log(city);
     var cityEl = document.createElement("button");
     cityEl.textContent = city;
     cityEl.classList.add("btn", "btn-primary", "btn-block", "mt-2", "mb-5");
     cityEl.setAttribute("class", "d-block w-100");
     cityEl.setAttribute("id", "city-button");
-    subcontainerEl.append(cityEl);
+    containerButtons.append(cityEl);
+    cityEl.addEventListener("click", function (event) {
+      let seachedCity = event.target.textContent;
+      getApi(seachedCity);
+    });
   }
 }
 
-document.getElementById("search-button").addEventListener("click", getApi);
+displayCity();
+document.getElementById("search-button").addEventListener("click", function () {
+  getApi(cityInputEl.value);
+});
