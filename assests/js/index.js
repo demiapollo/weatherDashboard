@@ -67,13 +67,19 @@ function getCurrentDay(cityName) {
             <div class="card" style="width: 100%;">
             <h4 class="card-title">${cityName} <span>(${dayjs(
         data.dt_txt
-      ).format("MM/DD/YYYY")})</span></h4>
-            <h5 class="card-title">${data.weather[0].description}<span>
-  <img src="https://openweathermap.org/img/wn/${
-    data.weather[0].icon
-  }@2x.png"." class="card-img-top" height="40" width="5" alt="..."></span></h5>
+      ).format("MM/DD/YYYY")})</span>
+      
+            <span>
+            <img src="https://openweathermap.org/img/wn/${
+              data.weather[0].icon
+            }@2x.png"." class="card-img-top" alt="..."></span>  
+      
+      
+      </h4>
+            <h5 class="card-title">${data.weather[0].description}</h5>
+            
+            
 
-    
     <p class="card-text">Temprature ${data.main.temp}</p>
     <p class="card-text">Humidity ${data.main.humidity}</p>
     <p class="card-text">Wind Speed ${data.wind.speed}</p>
